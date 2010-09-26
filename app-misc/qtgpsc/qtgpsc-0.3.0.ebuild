@@ -12,10 +12,11 @@ SRC_URI="http://qtgpsc.googlecode.com/files/${P}.tar.gz"
 
 LICENSE="LGPL-2"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~x86"
 IUSE=""
 
-RDEPEND=""
+RDEPEND="x11-libs/qt-core
+	sci-geosciences/gpsd"
 
 DEPEND="${RDEPEND}
 	dev-util/pkgconfig
