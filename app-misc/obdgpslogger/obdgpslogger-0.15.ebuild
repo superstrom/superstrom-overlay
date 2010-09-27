@@ -10,7 +10,7 @@ HOMEPAGE="http://icculus.org/obdgpslogger/"
 SRC_URI="http://icculus.org/obdgpslogger/downloads/${P}.tar.gz"
 #ESVN_REPO_URI="svn://svn.icculus.org/obdgpslogger/trunk"
 
-LICENSE="LGPL-2"
+LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS=""
 IUSE="dbus ftdi gpsd gui"
