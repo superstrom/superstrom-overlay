@@ -10,7 +10,7 @@ HOMEPAGE="http://code.google.com/p/qtgpsc/"
 SRC_URI="http://qtgpsc.googlecode.com/files/${P}.tar.gz"
 #ESVN_REPO_URI="https://qtgpsc.googlecode.com/hg/"
 
-LICENSE="LGPL-2"
+LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~x86"
 IUSE=""
