@@ -1,8 +1,8 @@
 # Copyright 1999-2010 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-lang/mono/mono-2.6.7.ebuild,v 1.5 2010/09/23 22:14:59 hwoarang Exp $
+# $Header: /var/cvsroot/gentoo-x86/dev-lang/mono/mono-2.8.ebuild,v 1.1 2010/10/08 08:29:02 ali_bush Exp $
 
-EAPI=2
+EAPI="2"
 
 inherit linux-info mono eutils flag-o-matic multilib go-mono pax-utils
 
@@ -11,14 +11,13 @@ HOMEPAGE="http://www.go-mono.com"
 
 LICENSE="MIT LGPL-2.1 GPL-2 BSD-4 NPL-1.1 Ms-PL GPL-2-with-linking-exception IDPL"
 SLOT="0"
-KEYWORDS="amd64 ppc x86"
+KEYWORDS="~amd64 ~ppc ~x86"
 
-IUSE="hardened llvm minimal moonlight profile4 xen"
+IUSE="hardened llvm minimal moonlight +profile4 xen"
 
 #Bash requirement is for += operator
 COMMONDEPEND="!<dev-dotnet/pnet-0.6.12
 	!dev-util/monodoc
-	>=dev-libs/glib-2.4:2
 	!minimal? ( =dev-dotnet/libgdiplus-${GO_MONO_REL_PV}* )
 	ia64? (	sys-libs/libunwind )"
 RDEPEND="${COMMONDEPEND}
@@ -35,10 +34,9 @@ MAKEOPTS="${MAKEOPTS} -j1"
 RESTRICT="test"
 
 PATCHES=(
-#	"${WORKDIR}/mono-2.2-libdir126.patch"
-#	"${FILESDIR}/mono-2.2-ppc-threading.patch"
-#	"${FILESDIR}/mono-2.2-uselibdir.patch"
-#	"${FILESDIR}/mono-2.6.4-require-glib.patch"
+	"${WORKDIR}/${P}-libdir.patch"
+	"${FILESDIR}/mono-2.2-ppc-threading.patch"
+	"${FILESDIR}/mono-2.2-uselibdir.patch"
 )
 
 pkg_setup() {
@@ -64,10 +62,10 @@ pkg_setup() {
 }
 
 src_prepare() {
-#	sed -e "s:@MONOLIBDIR@:$(get_libdir):" \
-#		< "${FILESDIR}"/mono-2.2-libdir126.patch \
-#		> "${WORKDIR}"/mono-2.2-libdir126.patch ||
-#		die "Sedding patch file failed"
+	sed -e "s:@MONOLIBDIR@:$(get_libdir):" \
+		< "${FILESDIR}"/${P}-libdir.patch \
+		> "${WORKDIR}"/${P}-libdir.patch ||
+		die "Sedding patch file failed"
 	go-mono_src_prepare
 
 	# we need to sed in the paxctl -m in the runtime/mono-wrapper.in so it don't
@@ -87,21 +85,21 @@ src_configure() {
 
 	#NOTE: We need the static libs for now so mono-debugger works.
 	#See http://bugs.gentoo.org/show_bug.cgi?id=256264 for details
+
+	#--with-glib=system configure: error: --with-glib=system is no longer supported as of Mono 2.8
+
 	go-mono_src_configure \
 		--enable-static \
 		--disable-quiet-build \
-		--with-preview \
 		$(use_with moonlight) \
 		--with-libgdiplus=$(use minimal && printf "no" || printf "installed" ) \
 		$(use_with xen xen_opt) \
-		$(use_enable llvm) \
-		$(use_enable llvm loadedllvm) \
 		--without-ikvm-native \
 		--with-jit \
+		$(use_enable llvm) \
+		$(use_enable llvm loadedllvm) \
 		--disable-dtrace \
 		$(use_with profile4)
-
-		#--with-glib=system
 }
 
 src_test() {
