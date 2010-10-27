@@ -5,7 +5,7 @@
 EAPI=3
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/~krh/wayland"
-EGIT_BOOTSTRAP="eautoreconf"
+#EGIT_BOOTSTRAP="eautoreconf"
 
 inherit autotools autotools-utils git
 
@@ -16,7 +16,7 @@ SRC_URI=""
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE=""
+IUSE="demo"
 
 DEPEND="x11-libs/cairo[opengl]
 	x11-libs/libxkbcommon
@@ -35,5 +35,34 @@ RDEPEND="${DEPEND}"
 AUTOTOOLS_IN_SOURCE_BUILD=1
 
 EGIT_PATCHES=(
-	"${FILESDIR}/${P}-as_needed.patch"
+#	"${FILESDIR}/${P}-as_needed.patch"
+	"${FILESDIR}/${P}-install_compositor.patch"
 )
+
+src_prepare() {
+	git_src_prepare
+
+	echo 'libtoytoolkit_la_LIBADD = \$(top_builddir)/wayland/libwayland-client.la' >> ${S}/clients/Makefile.am
+
+	cd ${S}
+	if use demo; then
+		epatch "${FILESDIR}/${P}-install_demo.patch"
+	fi
+
+	eautoreconf
+}
+
+src_configure() {
+	econf	--program-prefix=wayland-
+}
+
+src_install() {
+	autotools-utils_src_install
+
+        insinto /etc/udev/rules.d/
+        newins "${S}/compositor/70-wayland.rules" 70-wayland.rules || die
+}
+
+pkg_postinst() {
+        udevadm control --reload-rules && udevadm trigger --subsystem-match=drm --subsystem-match=input
+}
