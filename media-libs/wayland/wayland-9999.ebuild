@@ -4,13 +4,13 @@
 
 EAPI=3
 
-EGIT_REPO_URI="git://anongit.freedesktop.org/~krh/wayland"
+EGIT_REPO_URI="git://anongit.freedesktop.org/wayland"
 #EGIT_BOOTSTRAP="eautoreconf"
 
 inherit autotools autotools-utils git
 
 DESCRIPTION="Wayland is a nano display server"
-HOMEPAGE="http://groups.google.com/group/wayland-display-server"
+HOMEPAGE="http://wayland.freedesktop.org/"
 SRC_URI=""
 
 LICENSE="GPL-2"
@@ -35,14 +35,11 @@ RDEPEND="${DEPEND}"
 AUTOTOOLS_IN_SOURCE_BUILD=1
 
 EGIT_PATCHES=(
-#	"${FILESDIR}/${P}-as_needed.patch"
 	"${FILESDIR}/${P}-install_compositor.patch"
 )
 
 src_prepare() {
 	git_src_prepare
-
-	echo 'libtoytoolkit_la_LIBADD = \$(top_builddir)/wayland/libwayland-client.la' >> ${S}/clients/Makefile.am
 
 	cd ${S}
 	if use demo; then
