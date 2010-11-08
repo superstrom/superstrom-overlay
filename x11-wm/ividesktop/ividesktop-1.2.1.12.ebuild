@@ -19,7 +19,7 @@ SRC_URI="http://repo.meego.com/MeeGo/builds/${MEEGO_V}/${MEEGO_VV}/ivi/repos/sou
 
 LICENSE="LGPL-2.1"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~x86"
 IUSE="debug pch plainqt"
 
 COMMON_DEPEND="
