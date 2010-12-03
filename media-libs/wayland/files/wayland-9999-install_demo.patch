@@ -1,8 +1,0 @@
---- clients/Makefile.am.bak	2010-10-18 21:58:07.000000000 -0400
-+++ clients/Makefile.am	2010-10-18 21:58:41.000000000 -0400
-@@ -1,4 +1,4 @@
--noinst_PROGRAMS = gears flower screenshot terminal image view dnd
-+bin_PROGRAMS = gears flower screenshot terminal image view dnd
- noinst_LTLIBRARIES = libtoytoolkit.la
- 
- INCLUDES = -I$(top_srcdir)/wayland $(CLIENT_CFLAGS) $(POPPLER_CFLAGS)
