@@ -1,10 +1,10 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/x11-libs/cairo/cairo-9999.ebuild,v 1.9 2011/01/11 18:58:37 scarabeus Exp $
 
 EAPI=3
 
-	EGIT_REPO_URI="git://anongit.freedesktop.org/git/cairo"
+EGIT_REPO_URI="git://anongit.freedesktop.org/git/cairo"
 [[ ${PV} == *9999 ]] && GIT_ECLASS="git"
 
 inherit eutils flag-o-matic autotools ${GIT_ECLASS}
@@ -16,18 +16,19 @@ HOMEPAGE="http://cairographics.org/"
 LICENSE="|| ( LGPL-2.1 MPL-1.1 )"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
-IUSE="X aqua debug directfb doc drm glx gallium opengl openvg qt4 static-libs +svg xcb"
+IUSE="X aqua debug directfb doc drm gallium glx opengl openvg qt4 static-libs +svg xcb"
 
 # Test causes a circular depend on gtk+... since gtk+ needs cairo but test needs gtk+ so we need to block it
 RESTRICT="test"
 
 RDEPEND="media-libs/fontconfig
-	>=media-libs/freetype-2.1.9
+	media-libs/freetype:2
 	media-libs/libpng:0
 	sys-libs/zlib
 	>=x11-libs/pixman-0.18.4
 	directfb? ( dev-libs/DirectFB )
 	opengl? ( virtual/opengl )
+	openvg? ( media-libs/mesa[gallium] )
 	qt4? ( >=x11-libs/qt-gui-4.4:4 )
 	svg? ( dev-libs/libxml2 )
 	X? (
@@ -41,12 +42,11 @@ RDEPEND="media-libs/fontconfig
 		)
 	)
 	xcb? (
-		>=x11-libs/libxcb-1.1.92
+		x11-libs/libxcb
 		x11-libs/xcb-util
 	)"
-
 DEPEND="${RDEPEND}
-	>=dev-util/pkgconfig-0.19
+	dev-util/pkgconfig
 	>=sys-devel/libtool-2
 	doc? (
 		>=dev-util/gtk-doc-1.6
@@ -87,6 +87,7 @@ src_configure() {
 
 	if use X; then
 		myopts+="
+			--enable-tee=yes
 			$(use_enable drm)
 		"
 
