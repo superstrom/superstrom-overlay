@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<layman>
+        <overlay contact="greg.sandstrom@gmail.com" name="superstrom" src="http://github.com/superstrom/superstrom-overlay.git" type="git">
+                <link>http://github.com/superstrom/superstrom-overlay</link>
+                <description>Greg's personal overlay</description>
+        </overlay>
+</layman>
