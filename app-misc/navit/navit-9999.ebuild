@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="2"
+EAPI="3"
 
 inherit eutils autotools subversion
 
@@ -48,30 +48,18 @@ COMMON_DEPEND="
 	gui_gtk? ( x11-libs/gtk+:2 )
 	graphics_gtk? (
 		x11-libs/gtk+:2
-		svg? ( gnome-base/librsvg[zlib] )
+		svg? ( gnome-base/librsvg )
 	)
+	gui_qml? ( x11-libs/qt-declarative )
 	graphics_qt? ( x11-libs/qt-core )
 	graphics_sdl? ( media-libs/sdl-image[png] )
 	speech_speechd? ( app-accessibility/speechd )"
 
-# cvs required by gettext's autopoint.
-# subversion requires webdav to fetch navit. See subversion.eclass
 DEPEND="${COMMON_DEPEND}
-	|| (
-		dev-util/cvs
-		dev-vcs/cvs
-	)
-	dev-util/pkgconfig
-	|| (
-		dev-util/subversion[webdav-neon]
-		dev-util/subversion[webdav-serf]
-		dev-vcs/subversion[webdav-neon]
-		dev-vcs/subversion[webdav-serf]
-	)
 	sys-devel/gettext
 	svg2png? (
 		|| (
-			gnome-base/librsvg[zlib]
+			gnome-base/librsvg
 			media-gfx/imagemagick[svg,png,xml]
 			media-gfx/inkscape
 			kde-base/kdelibs
