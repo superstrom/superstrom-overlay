@@ -1,11 +1,11 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-libs/cairo/cairo-9999.ebuild,v 1.9 2011/01/11 18:58:37 scarabeus Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-libs/cairo/cairo-9999.ebuild,v 1.12 2011/04/29 12:05:19 scarabeus Exp $
 
-EAPI=3
+EAPI=4
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/git/cairo"
-[[ ${PV} == *9999 ]] && GIT_ECLASS="git"
+[[ ${PV} == *9999 ]] && GIT_ECLASS="git-2"
 
 inherit eutils flag-o-matic autotools ${GIT_ECLASS}
 
@@ -16,7 +16,7 @@ HOMEPAGE="http://cairographics.org/"
 LICENSE="|| ( LGPL-2.1 MPL-1.1 )"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
-IUSE="X aqua debug directfb doc drm gallium glx opengl openvg qt4 static-libs +svg xcb"
+IUSE="X aqua debug directfb doc drm gallium +glib glx opengl openvg qt4 static-libs +svg xcb"
 
 # Test causes a circular depend on gtk+... since gtk+ needs cairo but test needs gtk+ so we need to block it
 RESTRICT="test"
@@ -27,6 +27,7 @@ RDEPEND="media-libs/fontconfig
 	sys-libs/zlib
 	>=x11-libs/pixman-0.18.4
 	directfb? ( dev-libs/DirectFB )
+	glib? ( >=dev-libs/glib-2.28.6:2 )
 	opengl? ( virtual/opengl )
 	openvg? ( media-libs/mesa[gallium] )
 	qt4? ( >=x11-libs/qt-gui-4.4:4 )
@@ -60,6 +61,13 @@ DEPEND="${RDEPEND}
 		)
 	)"
 
+# drm module requires X
+# for gallium we need to enable drm
+REQUIRED_USE="
+	drm? ( X )
+	gallium? ( drm )
+"
+
 src_prepare() {
 	epatch "${FILESDIR}"/${PN}-1.8.8-interix.patch
 
@@ -85,29 +93,13 @@ src_configure() {
 	#gets rid of fbmmx.c inlining warnings
 	append-flags -finline-limit=1200
 
-	if use X; then
+	use X && myopts+=" --enable-tee=yes"
+	if use drm; then
 		myopts+="
-			--enable-tee=yes
-			$(use_enable drm)
+			$(use_enable xcb xcb-drm)
 		"
-
-		if use drm; then
-			myopts+="
-				$(use_enable gallium)
-				$(use_enable xcb xcb-drm)
-			"
-		else
-			use gallium && ewarn "Gallium use requires drm use enabled. So disabling for now."
-			myopts+="
-				--disable-gallium
-				--disable-xcb-drm
-			"
-		fi
 	else
-		use drm && ewarn "drm use requires X use enabled. So disabling for now."
 		myopts+="
-			--disable-drm
-			--disable-gallium
 			--disable-xcb-drm
 		"
 	fi
@@ -123,15 +115,18 @@ src_configure() {
 		$(use_enable aqua quartz-image) \
 		$(use_enable debug test-surfaces) \
 		$(use_enable directfb) \
+		$(use_enable glib gobject) \
 		$(use_enable doc gtk-doc) \
 		$(use_enable openvg vg) \
 		$(use_enable opengl gl) \
-		$(use_enable glx) \
 		$(use_enable qt4 qt) \
 		$(use_enable static-libs static) \
 		$(use_enable svg) \
 		$(use_enable xcb) \
 		$(use_enable xcb xcb-shm) \
+		$(use_enable drm) \
+		$(use_enable gallium) \
+		$(use_enable glx) \
 		--enable-ft \
 		--enable-pdf \
 		--enable-png \
@@ -142,6 +137,7 @@ src_configure() {
 
 src_install() {
 	# parallel make install fails
-	emake -j1 DESTDIR="${D}" install || die "Installation failed"
-	dodoc AUTHORS ChangeLog NEWS README || die
+	emake -j1 DESTDIR="${D}" install
+	find "${ED}" -name '*.la' -exec rm -f {} +
+	dodoc AUTHORS ChangeLog NEWS README
 }
