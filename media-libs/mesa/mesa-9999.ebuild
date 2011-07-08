@@ -220,6 +220,7 @@ src_configure() {
 		myconf+="
 			--with-state-trackers=glx,dri$(use egl && echo ",egl")$(use openvg && echo ",vega")$(use d3d && echo ",d3d1x")
 			$(use_enable llvm gallium-llvm)
+			$(use_enable egl gallium-egl)
 			$(use_enable video_cards_vmware gallium-svga)
 			$(use_enable video_cards_nouveau gallium-nouveau)
 			$(use_enable video_cards_intel gallium-i915)
@@ -265,6 +266,7 @@ src_configure() {
 		--disable-glut \
 		--without-demos \
 		--enable-xcb \
+		--enable-shared-glapi \
 		$(use_enable debug) \
 		$(use_enable motif glw) \
 		$(use_enable motif) \
