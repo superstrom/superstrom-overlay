@@ -18,7 +18,7 @@ IUSE="dbus ftdi gpsd gui"
 
 RDEPEND="
 	dbus? ( sys-apps/dbus )
-	gpsd? ( sci-geosciences/gpsd )
+	gpsd? ( >=sci-geosciences/gpsd-2.96 )
 	ftdi? ( dev-embedded/libftdi )
         gui? ( x11-libs/fltk )"
 
@@ -26,6 +26,10 @@ DEPEND="${RDEPEND}
 	dev-util/pkgconfig
 	|| ( dev-util/subversion  dev-vcs/subversion )"
 
+src_prepare() {
+	cd "${S}"
+	epatch "${FILESDIR}/gpsd-2.96.patch"
+}
 
 src_configure() {
         mycmakeargs=(

@@ -1,0 +1,26 @@
+--- obdgpslogger-9999/src/logger/gpscomm.c.bak	2011-07-12 08:10:44.000000000 -0400
++++ obdgpslogger-9999/src/logger/gpscomm.c	2011-07-12 20:31:47.000000000 -0400
+@@ -24,10 +24,12 @@
+ #ifdef HAVE_GPSD
+ 
+ #include <gps.h>
++#include <stdlib.h>
+ 
+ struct gps_data_t *opengps(char *server, char *port) {
+-	struct gps_data_t *g = gps_open(server,port);
+-	if(NULL == g)
++	struct gps_data_t *g = (struct gps_data_t *)malloc(sizeof(struct gps_data_t));
++	int ret = gps_open(server,port,g);
++	if(!ret)
+ 		return NULL;
+ 
+ #ifdef HAVE_GPSD_V3
+@@ -58,7 +60,7 @@
+ 		count = select(g->gps_fd + 1, &fds, NULL, NULL, &timeout);
+ 		if(count > 0) {
+ #ifdef HAVE_GPSD_V3
+-			gps_poll(g);
++			gps_read(g);
+ #else
+ 			gps_query(g, "o");
+ #endif //HAVE_GPSD_V3
