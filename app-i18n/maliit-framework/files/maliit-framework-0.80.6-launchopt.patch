@@ -1,0 +1,20 @@
+diff -crN maliit-maliit-framework_orig/passthroughserver/passthroughserver.pro maliit-maliit-framework/passthroughserver/passthroughserver.pro
+*** maliit-maliit-framework_orig/passthroughserver/passthroughserver.pro	2011-09-21 23:50:24.000000000 +0900
+--- maliit-maliit-framework/passthroughserver/passthroughserver.pro	2011-10-07 10:51:47.602952156 +0900
+***************
+*** 51,57 ****
+  check.target = check
+  check.depends += $$TARGET
+  
+! system(dpkg-architecture -ei386):SOFTWARE="-software -bypass-wm-hint "
+  message(Argument added to im server: $$SOFTWARE $$TARGETDEVICE)
+  
+  SERVICE_FILE = minputmethodserver.service.in
+--- 51,57 ----
+  check.target = check
+  check.depends += $$TARGET
+  
+! SOFTWARE="-software -bypass-wm-hint "
+  message(Argument added to im server: $$SOFTWARE $$TARGETDEVICE)
+  
+  SERVICE_FILE = minputmethodserver.service.in
