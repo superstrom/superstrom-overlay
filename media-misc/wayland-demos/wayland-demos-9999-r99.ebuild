@@ -5,7 +5,6 @@
 EAPI=3
 
 EGIT_REPO_URI="git://anongit.freedesktop.org/wayland/wayland-demos"
-EGIT_BOOTSTRAP="eautoreconf"
 
 inherit autotools autotools-utils git-2
 
@@ -42,7 +41,8 @@ DEPEND="media-libs/wayland
 	clients? (
 		media-libs/mesa[wayland]
 		dev-libs/glib:2
-		>=x11-libs/cairo-1.10[opengl]
+		media-libs/libjpeg-turbo
+		x11-libs/cairo[opengl]
 		|| ( x11-libs/gdk-pixbuf:2 <x11-libs/gtk+-2.20:2 )
 		=x11-libs/libxkbcommon-9999
 		poppler? ( app-text/poppler[cairo] )
@@ -69,14 +69,5 @@ src_prepare()
 	sed -i -e "/PROGRAMS/s/noinst/bin/" \
 		{compositor,clients}"/Makefile.am" || \
 		die "sed {compositor,clients}/Makefile.am failed!"
-}
-
-pkg_postinst()
-{
-	einfo "To run the wayland exmaple compositor as x11 client execute:"
-	einfo "   DISPLAY=:0 EGL_PLATFORM=x11 EGL_DRIVER=egl_dri2 wayland-compositor"
-	einfo
-	einfo "Start the wayland clients with EGL_PLATFORM set to wayland:"
-	einfo "   EGL_PLATFORM=wayland wayland-terminal"
-	einfo
+	eautoreconf
 }
