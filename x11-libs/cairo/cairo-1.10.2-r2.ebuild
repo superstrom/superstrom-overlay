@@ -1,6 +1,6 @@
 # Copyright 1999-2011 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-libs/cairo/cairo-9999.ebuild,v 1.12 2011/04/29 12:05:19 scarabeus Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-libs/cairo/cairo-1.10.2-r1.ebuild,v 1.9 2011/03/05 17:52:48 xarthisius Exp $
 
 EAPI=4
 
@@ -15,8 +15,8 @@ HOMEPAGE="http://cairographics.org/"
 
 LICENSE="|| ( LGPL-2.1 MPL-1.1 )"
 SLOT="0"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
-IUSE="X aqua cogl debug directfb doc drm gallium +glib glx gles opengl openvg qt4 static-libs +svg xcb"
+KEYWORDS="alpha amd64 arm hppa ia64 ~mips ppc ppc64 s390 sh sparc x86 ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
+IUSE="X aqua debug directfb doc drm gallium +glib opengl openvg qt4 static-libs +svg xcb"
 IUSE="${IUSE} cairo-perf-trace"
 
 # Test causes a circular depend on gtk+... since gtk+ needs cairo but test needs gtk+ so we need to block it
@@ -27,12 +27,10 @@ RDEPEND="media-libs/fontconfig
 	media-libs/libpng:0
 	sys-libs/zlib
 	>=x11-libs/pixman-0.18.4
-	cogl? ( media-libs/cogl )
 	directfb? ( dev-libs/DirectFB )
-	glib? ( >=dev-libs/glib-2.28.6:2 )
+	glib? ( dev-libs/glib:2 )
 	opengl? ( virtual/opengl )
 	openvg? ( media-libs/mesa[gallium] )
-	gles? ( media-libs/mesa[gles2] )
 	qt4? ( >=x11-libs/qt-gui-4.4:4 )
 	svg? ( dev-libs/libxml2 )
 	X? (
@@ -72,7 +70,7 @@ REQUIRED_USE="
 "
 
 src_prepare() {
-	epatch "${FILESDIR}"/${PN}-1.8.8-interix.patch
+	epatch "${FILESDIR}"/${P}-interix.patch
 
 	# Slightly messed build system YAY
 	if [[ ${PV} == *9999* ]]; then
@@ -91,12 +89,15 @@ src_configure() {
 	use sh && myopts+=" --disable-atomic"
 
 	[[ ${CHOST} == *-interix* ]] && append-flags -D_REENTRANT
-	# http://bugs.freedesktop.org/show_bug.cgi?id=15463
-	[[ ${CHOST} == *-solaris* ]] && append-flags -D_POSIX_PTHREAD_SEMANTICS
+
+	# tracing fails to compile, because Solaris' libelf doesn't do large files
+	[[ ${CHOST} == *-solaris* ]] && myopts+=" --disable-trace"
+
+	# 128-bits long arithemetic functions are missing
+	[[ ${CHOST} == powerpc*-*-darwin* ]] && filter-flags -mcpu=*
 
 	#gets rid of fbmmx.c inlining warnings
 	append-flags -finline-limit=1200
-
 	# --disable-xcb-lib:
 	#	do not override good xlib backed by hardforcing rendering over xcb
 	econf \
@@ -120,9 +121,6 @@ src_configure() {
 		$(use_enable xcb xcb-shm) \
 		$(use_enable drm) \
 		$(use_enable gallium) \
-		$(use_enable glx) \
-		$(use_enable gles glesv2) \
-		$(use_enable cogl) \
 		--enable-ft \
 		--enable-pdf \
 		--enable-png \
@@ -131,10 +129,11 @@ src_configure() {
 }
 
 src_compile() {
-	emake
+	emake || die "Build failed"
 
 	if use cairo-perf-trace; then
-		emake -C "${S}/perf" cairo-perf-trace
+		emake -C "${S}/perf" cairo-perf-trace || \
+		    die "cairo-perf-trace build failed"
 	fi
 }
 
