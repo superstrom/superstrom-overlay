@@ -8,5 +8,9 @@ SRC_URI="http://garmintools.googlecode.com/files/${PN}-${PV}.tar.gz"
 
 LICENSE=""
 SLOT="0"
-KEYWORDS="amd64"
+KEYWORDS="~amd64 ~x86"
 IUSE=""
+
+RDEPEND="
+	dev-libs/libusb"
+DEPEND="${RDEPEND}"
