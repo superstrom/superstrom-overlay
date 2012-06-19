@@ -3,8 +3,8 @@ EAPI="4"
 inherit cmake-utils git-2
 
 DESCRIPTION="An open source Linux client for Google Drive."
-HOMEPAGE="http://match065.github.com/grive/"
-EGIT_REPO_URI="https://github.com/match065/grive.git"
+HOMEPAGE="https://github.com/Grive/grive"
+EGIT_REPO_URI="https://github.com/Grive/grive.git"
 
 LICENSE="GPL-2"
 SLOT="0"
