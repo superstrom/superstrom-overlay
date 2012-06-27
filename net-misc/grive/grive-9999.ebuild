@@ -12,6 +12,7 @@ KEYWORDS=""
 IUSE=""
 
 COMMON_DEPEND="
+	dev-libs/boost
 	net-misc/curl
 	dev-libs/json-c
 	dev-libs/openssl
