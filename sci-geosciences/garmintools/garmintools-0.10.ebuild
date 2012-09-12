@@ -12,5 +12,5 @@ KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 RDEPEND="
-	dev-libs/libusb"
+	virtual/libusb:0"
 DEPEND="${RDEPEND}"
