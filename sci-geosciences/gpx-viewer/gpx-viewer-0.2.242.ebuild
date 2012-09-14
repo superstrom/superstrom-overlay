@@ -6,14 +6,13 @@ EAPI="2"
 
 inherit autotools eutils versionator
 
-MY_PN="gpx-viewer"
-MY_P="${MY_PN}-${PV}"
 MY_PV=$(get_version_component_range 1-2)
 BZR_V=$(get_version_component_range 3)
+BZR_B="port-to-libchamplain-0.12"
 
 DESCRIPTION="Simple program to visualize a gpx file"
 HOMEPAGE="http://blog.sarine.nl/${PN}/"
-SRC_URI="http://bazaar.launchpad.net/~gpx-viewer-team/gpx-viewer/port-to-libchamplain-0.12/tarball/${BZR_V} -> ${MY_PN}-bzr-${BZR_V}.tar.gz"
+SRC_URI="http://bazaar.launchpad.net/~gpx-viewer-team/gpx-viewer/${BZR_B}/tarball/${BZR_V} -> ${PN}-bzr-${BZR_V}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -33,7 +32,7 @@ DEPEND="${RDEPEND}
 	>=dev-util/intltool-0.21
 	dev-util/pkgconfig"
 
-S="${WORKDIR}/~gpx-viewer-team/gpx-viewer/port-to-libchamplain-0.12"
+S="${WORKDIR}/~gpx-viewer-team/gpx-viewer/${BZR_B}"
 
 src_prepare() {
 	epatch "${FILESDIR}/${MY_PV}-configure.ac.patch"
