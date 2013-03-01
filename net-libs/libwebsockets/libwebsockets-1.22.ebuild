@@ -4,20 +4,22 @@
 
 EAPI=5
 
-EGIT_REPO_URI="git://git.warmcat.com/libwebsockets"
+REAL_PN="libwebsockets-1.22-chrome26-firefox18"
 
-inherit git-2 autotools
+inherit autotools
 
 DESCRIPTION="C Websockets Server Library"
 HOMEPAGE="http://libwebsockets.org"
-SRC_URI=""
+SRC_URI="http://git.warmcat.com/cgi-bin/cgit/libwebsockets/snapshot/${REAL_PN}.tar.gz"
 
 LICENSE="LGPL-2.1"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64"
 IUSE="openssl +libcrypto nofork noping"
 DEPEND="openssl? ( dev-libs/openssl )"
 RDEPEND="${DEPEND}"
+
+S=${WORKDIR}/${REAL_PN}
 
 src_prepare() {
 	eautoreconf
