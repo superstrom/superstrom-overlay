@@ -24,9 +24,9 @@ DEPEND="
 	>=dev-libs/boost-1.46
 	>=sci-libs/gdal-1.6.0
 	>=sci-libs/proj-4.6
-	>=dev-qt/qt-gui-${QT_MINIMAL}:4
-	>=dev-qt/qt-svg-${QT_MINIMAL}:4
-	>=dev-qt/qt-webkit-${QT_MINIMAL}:4
+	>=dev-qt/qtgui-${QT_MINIMAL}:4
+	>=dev-qt/qtsvg-${QT_MINIMAL}:4
+	>=dev-qt/qtwebkit-${QT_MINIMAL}:4
 	exif? ( media-gfx/exiv2 )
 	gps? ( >=sci-geosciences/gpsd-2.92[cxx] )
 	libproxy? ( net-libs/libproxy )
