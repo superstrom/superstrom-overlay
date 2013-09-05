@@ -12,7 +12,7 @@ RDEPEND="
 	dev-libs/libxml2
 	dev-qt/qtcore:4
 	dev-qt/qtgui:4
-	dev-qt/qtmobility[location]
+	dev-qt/qt-mobility[location]
 "
 
 SLOT="0"
