@@ -4,7 +4,7 @@ inherit eutils qt4-r2
 
 IUSE=""
 
-DESCRIPTION="MoNav is a Desktop / Mobile application that offers state-of-the-art fast and exact routing with OpenStreetMap Data."
+DESCRIPTION="MoNav offers state-of-the-art fast and exact routing with OpenStreetMap Data"
 HOMEPAGE="https://code.google.com/p/monav/"
 SRC_URI="http://monav.googlecode.com/files/${P}.tar.gz"
 
