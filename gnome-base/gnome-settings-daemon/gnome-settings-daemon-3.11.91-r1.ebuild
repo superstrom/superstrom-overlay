@@ -96,7 +96,7 @@ src_prepare() {
 		epatch "${FILESDIR}/${PN}-3.7.90-short-touchpad-timeout.patch"
 
 	# FIXME
-	epatch "${FILESDIR}/${PN}-3.11.90-optional.patch"
+	epatch "${FILESDIR}/${PN}-3.11.91-optional.patch"
 
 	epatch_user
 	eautoreconf
