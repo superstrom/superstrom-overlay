@@ -17,6 +17,7 @@ IUSE="+colord +cups debug +i18n input_devices_wacom -openrc-force packagekit pol
 REQUIRED_USE="
 	packagekit? ( udev )
 	smartcard? ( udev )
+        input_devices_wacom? ( udev )
 "
 KEYWORDS="~alpha ~amd64 ~arm ~ppc ~ppc64 ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
 
@@ -96,7 +97,7 @@ src_prepare() {
 		epatch "${FILESDIR}/${PN}-3.7.90-short-touchpad-timeout.patch"
 
 	# FIXME
-	epatch "${FILESDIR}/${PN}-3.11.91-optional.patch"
+	epatch "${FILESDIR}/${PN}-3.11.91-wacom-optional.patch"
 
 	epatch_user
 	eautoreconf
